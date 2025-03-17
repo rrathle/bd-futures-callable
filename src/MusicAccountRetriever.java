@@ -1,6 +1,7 @@
 
 
 import utilities.AmazonMusicAccount;
+import utilities.ImportAccountTask;
 import utilities.MusicAccountService;
 
 import java.util.concurrent.ExecutorService;
@@ -29,9 +30,13 @@ public class MusicAccountRetriever {
      * @return A Future result of the AmazonMusicAccount.
      */
     public Future<AmazonMusicAccount> retrieveAccount(String accountID) {
+        //Step 1 create an ExecutorService
         ExecutorService accountExecutor = Executors.newCachedThreadPool();
+        //Step 2: create an ImportAccountTask(callable)
+        ImportAccountTask task = new ImportAccountTask(accountService, accountID);;
 
-        Future<AmazonMusicAccount> result = null;
+
+        Future<AmazonMusicAccount> result = accountExecutor.submit(task) ;
         accountExecutor.shutdown();
 
         return result;
